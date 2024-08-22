@@ -9,7 +9,7 @@ import java.util.List;
 @RequestMapping("/events")
 public class EventController {
 
-    EventService eventService;
+    private final EventService eventService;
 
     public EventController(EventService eventService) {
         this.eventService = eventService;
@@ -22,21 +22,25 @@ public class EventController {
 
     @GetMapping("/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable Long id) {
-        return  ResponseEntity.of(eventService.getEventById(id));
+        return ResponseEntity.of(eventService.getEventById(id));
     }
 
     @PostMapping
-    public ResponseEntity<EventDTO> createEvent (@RequestBody EventDTO eventDTO) {
-        return ResponseEntity.status(202).body(eventService.createEvent(eventDTO));
+    public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) {
+        EventDTO createdEvent = eventService.createEvent(eventDTO);
+        return ResponseEntity.status(201).body(createdEvent);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventDTO> updateEvent (@PathVariable Long id, @RequestBody EventDTO eventDTO) {
-        return ResponseEntity.ok(eventService.updateEvent(id, eventDTO));
+    public ResponseEntity<EventDTO> updateEvent(@PathVariable Long id, @RequestBody EventDTO eventDTO) {
+        EventDTO updatedEvent = eventService.updateEvent(id, eventDTO);
+        return ResponseEntity.ok(updatedEvent);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<EventDTO> deleteEvent (@PathVariable Long id) {
-        return ResponseEntity.ok(eventService.deleteEvent(id));
+    public ResponseEntity<EventDTO> deleteEvent(@PathVariable Long id) {
+        EventDTO deletedEvent = eventService.deleteEvent(id);
+        return ResponseEntity.ok(deletedEvent);
     }
 }
+

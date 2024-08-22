@@ -49,8 +49,18 @@ public class DisciplineService {
     }
 
     public DisciplineDTO createDiscipline(DisciplineDTO disciplineDTO) {
-        Discipline discipline = toEntity(disciplineDTO);
-        return toDTO(disciplineRepository.save(discipline));
+        Discipline discipline = new Discipline();
+        discipline.setDisciplineName(disciplineDTO.getDisciplineName());
+        discipline.setApproxDuration(disciplineDTO.getApproxDuration());
+
+        Discipline savedDiscipline = disciplineRepository.save(discipline);
+
+        DisciplineDTO savedDisciplineDTO = new DisciplineDTO();
+        savedDisciplineDTO.setId(savedDiscipline.getId());
+        savedDisciplineDTO.setDisciplineName(savedDiscipline.getDisciplineName());
+        savedDisciplineDTO.setApproxDuration(savedDiscipline.getApproxDuration());
+
+        return savedDisciplineDTO;
     }
 
     /* public DisciplineDTO createDiscipline(DisciplineDTO disciplineDTO) {

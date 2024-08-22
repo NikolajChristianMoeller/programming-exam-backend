@@ -24,6 +24,7 @@ public class Event {
     private String maximumParticipants;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "time_slot_id")  // Add this annotation to specify the foreign key column
     private TimeSlot timeSlot;
     @ManyToOne(fetch = FetchType.EAGER)
     private Track track;

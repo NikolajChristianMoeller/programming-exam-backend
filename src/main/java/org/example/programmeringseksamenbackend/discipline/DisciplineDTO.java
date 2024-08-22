@@ -9,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DisciplineDTO {
     private Long id;
+    private Long eventId;
     private String disciplineName;
     private String approxDuration;
     private int numberOfParticipants;
@@ -17,4 +18,6 @@ public class DisciplineDTO {
         this.disciplineName = disciplineName;
         this.approxDuration = approxDuration;
     }
+
+
 }

@@ -40,14 +40,14 @@ public class InitData implements CommandLineRunner {
         }
     }
 
-    private DisciplineDTO createDiscipline(int number){
-        DisciplineDTO discipline = new DisciplineDTO(
-                "Discipline " + number,
+    private DisciplineDTO createDiscipline(int number) {
+        DisciplineDTO disciplineDTO = new DisciplineDTO(
+                "Discipline ",
                 "ApproxDuration " + number
         );
 
-        DisciplineDTO nyDTO = disciplineService.createDiscipline(discipline);
-        return nyDTO;
+        DisciplineDTO savedDisciplineDTO = disciplineService.createDiscipline(disciplineDTO);
+        return savedDisciplineDTO;
     }
 
     public void createParticipant(int number, DisciplineDTO discipline){

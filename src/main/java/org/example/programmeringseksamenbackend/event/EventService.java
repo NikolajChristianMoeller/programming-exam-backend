@@ -1,6 +1,11 @@
 package org.example.programmeringseksamenbackend.event;
 
+import org.example.programmeringseksamenbackend.discipline.Discipline;
+import org.example.programmeringseksamenbackend.discipline.DisciplineDTO;
+import org.example.programmeringseksamenbackend.discipline.DisciplineRepository;
 import org.example.programmeringseksamenbackend.errorhandling.exception.NotFoundException;
+import org.example.programmeringseksamenbackend.timeslot.TimeSlot;
+import org.example.programmeringseksamenbackend.timeslot.TimeSlotRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +15,13 @@ import java.util.stream.Collectors;
 @Service
 public class EventService {
     EventRepository eventRepository;
+    DisciplineRepository disciplineRepository;
+    TimeSlotRepository timeSlotRepository;
 
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, DisciplineRepository disciplineRepository, TimeSlotRepository timeSlotRepository) {
         this.eventRepository = eventRepository;
+        this.disciplineRepository = disciplineRepository;
+        this.timeSlotRepository = timeSlotRepository;
     }
 
     private EventDTO toDTO(Event event) {
@@ -29,6 +38,12 @@ public class EventService {
         event.setEventName(eventDTO.getEventName());
         event.setMinimumDuration(eventDTO.getMinimumDuration());
         event.setMaximumParticipants(eventDTO.getMaximumParticipants());
+
+        if (eventDTO.getDiscipline() != null && eventDTO.getDiscipline().getId() != null) {
+            Discipline discipline = disciplineRepository.findById(eventDTO.getDiscipline().getId())
+                    .orElseThrow(() -> new NotFoundException("Discipline not found with id: " + eventDTO.getDiscipline().getId()));
+            event.setDiscipline(discipline);
+        }
         return event;
     }
 
@@ -56,8 +71,18 @@ public class EventService {
     }*/
 
     public EventDTO createEvent(EventDTO eventDTO) {
+        // Check if an event with the same details already exists
+        Optional<Event> existingEvent = eventRepository.findByEventNameAndMinimumDurationAndDisciplineId(
+                eventDTO.getEventName(), eventDTO.getMinimumDuration(), eventDTO.getDiscipline() != null ? eventDTO.getDiscipline().getId() : null);
+
+        if (existingEvent.isPresent()) {
+            // Handle the case where the event already exists
+            throw new RuntimeException("Event with the same details already exists");
+        }
+
         Event event = toEntity(eventDTO);
-        return toDTO(eventRepository.save(event));
+        Event savedEvent = eventRepository.save(event);
+        return toDTO(savedEvent);
     }
 
     public EventDTO updateEvent(Long id, EventDTO eventDTO) {
@@ -65,6 +90,11 @@ public class EventService {
             event.setEventName(eventDTO.getEventName());
             event.setMinimumDuration(eventDTO.getMinimumDuration());
             event.setMaximumParticipants(eventDTO.getMaximumParticipants());
+            if (eventDTO.getDiscipline() != null && eventDTO.getDiscipline().getId() != null) {
+                Discipline discipline = disciplineRepository.findById(eventDTO.getDiscipline().getId())
+                        .orElseThrow(() -> new NotFoundException("Discipline not found with id: " + eventDTO.getDiscipline().getId()));
+                event.setDiscipline(discipline);
+            }
             return toDTO(eventRepository.save(event));
         }).orElse(null);
     }
@@ -75,6 +105,26 @@ public class EventService {
         EventDTO eventDTO = toDTO(event);
         eventRepository.deleteById(id);
         return eventDTO;
+    }
+
+    public EventDTO assignTimeSlotToEvent(Long eventId, Long timeSlotId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event not found with id: " + eventId));
+        TimeSlot timeSlot = timeSlotRepository.findById(timeSlotId)
+                .orElseThrow(() -> new NotFoundException("TimeSlot not found with id: " + timeSlotId));
+
+        event.setTimeSlot(timeSlot);
+        Event updatedEvent = eventRepository.save(event);
+        return toDTO(updatedEvent);
+    }
+
+    public EventDTO removeTimeSlotFromEvent(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event not found with id: " + eventId));
+
+        event.setTimeSlot(null);
+        Event updatedEvent = eventRepository.save(event);
+        return toDTO(updatedEvent);
     }
 
 }
