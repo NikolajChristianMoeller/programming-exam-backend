@@ -31,6 +31,12 @@ public class EventController {
         return ResponseEntity.status(201).body(createdEvent);
     }
 
+    @PutMapping("/{eventId}/assignTrack/{trackId}")
+    public ResponseEntity<EventDTO> assignTrackToEvent(@PathVariable Long eventId, @PathVariable Long trackId) {
+        EventDTO updatedEvent = eventService.assignTrackToEvent(eventId, trackId);
+        return ResponseEntity.ok(updatedEvent);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<EventDTO> updateEvent(@PathVariable Long id, @RequestBody EventDTO eventDTO) {
         EventDTO updatedEvent = eventService.updateEvent(id, eventDTO);

@@ -20,7 +20,5 @@ public class ParticipantDTO {
     public ParticipantDTO(Long disciplineId, String participantNumber) {
         this.disciplineId = disciplineId;
         this.participantNumber = participantNumber;
-
-
     }
 }

@@ -18,9 +18,9 @@ public class TrackService {
     private TrackDTO toDTO(Track track) {
         TrackDTO trackDTO = new TrackDTO();
         trackDTO.setId(track.getId());
-        trackDTO.setTypeOfTrack(track.getTypeOfTrack());
-        trackDTO.setShapeType(track.getShapeType());
-        trackDTO.setSurfaceType(track.getSurfaceType());
+        trackDTO.setTrackType(track.getTrackType());
+        trackDTO.setTrackShape(track.getTrackShape());
+        trackDTO.setTrackSurface(track.getTrackSurface());
         trackDTO.setTrackLength(track.getTrackLength());
         trackDTO.setLanes(track.getLanes());
         return trackDTO;
@@ -29,9 +29,9 @@ public class TrackService {
     private Track toEntity(TrackDTO trackDTO) {
         Track track = new Track();
         track.setId(trackDTO.getId());
-        track.setTypeOfTrack(trackDTO.getTypeOfTrack());
-        track.setShapeType(trackDTO.getShapeType());
-        track.setSurfaceType(trackDTO.getSurfaceType());
+        track.setTrackType(trackDTO.getTrackType());
+        track.setTrackShape(trackDTO.getTrackShape());
+        track.setTrackSurface(trackDTO.getTrackSurface());
         track.setTrackLength(trackDTO.getTrackLength());
         track.setLanes(trackDTO.getLanes());
         return track;

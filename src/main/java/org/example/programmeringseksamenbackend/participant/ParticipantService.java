@@ -23,10 +23,14 @@ public class ParticipantService {
     private ParticipantDTO toDTO(Participant participant) {
         ParticipantDTO participantDTO = new ParticipantDTO();
         participantDTO.setId(participant.getId());
-        participantDTO.setDisciplineId(participant.getDiscipline().getId());
+        participantDTO.setFullName(participant.getFullName());
         participantDTO.setParticipantNumber(participant.getParticipantNumber());
+        participantDTO.setDisciplineId(participant.getDiscipline() != null ? participant.getDiscipline().getId() : null);
+        participantDTO.setGender(participant.getGender());
+        participantDTO.setAgeGroup(participant.getAgeGroup());
         return participantDTO;
     }
+
 
     private Participant toEntity(ParticipantDTO participantDTO) {
         Participant participant = new Participant();
@@ -58,24 +62,20 @@ public class ParticipantService {
     }
 
     public ParticipantDTO createParticipant(ParticipantDTO participantDTO) {
-        Discipline discipline = disciplineRepository.findById(participantDTO.getId())
-                .orElseThrow(() -> new NotFoundException("Discipline not found, provided id: " + participantDTO.getDisciplineId()));
+        Discipline discipline = disciplineRepository.findById(participantDTO.getDisciplineId())
+                .orElseThrow(() -> new NotFoundException("Discipline not found with id: " + participantDTO.getDisciplineId()));
 
-        Participant participant = participantRepository.save(toEntity(participantDTO));
-        discipline.getParticipants().add(participant);
+        Participant participant = toEntity(participantDTO);
+        participant.setDiscipline(discipline);
+
+        // Save participant
+        Participant savedParticipant = participantRepository.save(participant);
+
+        // Update discipline's participants list
+        discipline.getParticipants().add(savedParticipant);
         disciplineRepository.save(discipline);
 
-        return toDTO(participant);
-    }
-
-    public List<ParticipantDTO> createParticipantsInDiscipline(List<ParticipantDTO> participantDTOs, DisciplineDTO disciplineDTO) {
-        Discipline discipline = disciplineRepository.findById(disciplineDTO.getId())
-                .orElseThrow(() -> new NotFoundException("Discipline not found, provided id: " + disciplineDTO.getId()));
-        // Går igennem listen af ParticipantDTOer, hvert ParticipantDTO skal laves til en participant entity
-
-        List<Participant> participants = participantDTOs.stream().map(this::toEntity).toList();
-
-        return participantRepository.saveAll(participants).stream().map(this::toDTO).toList();
+        return toDTO(savedParticipant);
     }
 
     public ParticipantDTO updateParticipant(Long id, ParticipantDTO participantDTO) {

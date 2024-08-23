@@ -14,6 +14,10 @@ import org.example.programmeringseksamenbackend.track.TrackDTO;
 @NoArgsConstructor
 public class EventDTO {
     private Long id;
+    private Long disciplineId;
+    private Long timeSlotId;
+    private Long trackId;
+    private Long participantId;
     private String eventName;
     private String minimumDuration;
     private String participantGender;
@@ -23,4 +27,13 @@ public class EventDTO {
     private TimeSlotDTO timeSlot;
     private TrackDTO track;
     private ParticipantDTO participant;
+
+    public EventDTO(String eventName, String minimumDuration, String participantGender, String participantAgeGroup, String maximumParticipants) {
+        this.eventName = eventName;
+        this.minimumDuration = minimumDuration;
+        this.participantGender = participantGender;
+        this.participantAgeGroup = participantAgeGroup;
+        this.maximumParticipants = maximumParticipants;
+    }
+
 }

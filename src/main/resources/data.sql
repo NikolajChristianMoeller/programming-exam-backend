@@ -2,6 +2,7 @@ USE eksamen_db;
 
 CREATE SCHEMA IF NOT EXISTS eksamen_db;
 
+-- Insert into discipline table
 INSERT INTO discipline (discipline_name, approx_duration)
 VALUES
     ('100m Dash', '2 hours'),
@@ -15,6 +16,7 @@ VALUES
     ('400m Hurdles', '3 hours'),
     ('Decathlon', '8 hours');
 
+-- Insert into participant table
 INSERT INTO participant (full_name, participant_number, gender, age_group)
 VALUES
     ('Emma Brown', 20, 'FEMALE', 'JUNIOR'),
@@ -38,19 +40,23 @@ VALUES
     ('Abigail Thomas', 58, 'FEMALE', 'SENIOR'),
     ('Alexander Jackson', 110, 'MALE', 'SENIOR');
 
-INSERT INTO event (event_name, minimum_duration, maximum_participants, time_slot_id)
+-- Insert into event table
+-- Insert into event table with all foreign keys
+INSERT INTO event (event_name, minimum_duration, maximum_participants, time_slot_id, track_id, discipline_id, participant_id)
 VALUES
-    ('100m Dash', '1 day', 10, 1),
-    ('Marathon', '1 day', 10, 2),
-    ('Long Jump', '2 days', 10, 3),
-    ('Pole Vault', '2 days', 10, 4),
-    ('4x400m Relay', '1 day', 10, 5),
-    ('Shot Put', '2 days', 10, 6),
-    ('High Jump', '2 days', 10, 7),
-    ('1500m Run', '1 day', 10, 8),
-    ('400m Hurdles', '1 day', 10, 9),
-    ('Decathlon', '2 days', 10, 10);
+    ('100m Dash', '1 day', 10, 1, 1, 1, 1),
+    ('Marathon', '1 day', 10, 2, 2, 2, 2),
+    ('Long Jump', '2 days', 10, 3, 3, 3, 3),
+    ('Pole Vault', '2 days', 10, 4, 4, 4, 4),
+    ('4x400m Relay', '1 day', 10, 5, 5, 5, 5),
+    ('Shot Put', '2 days', 10, 6, 6, 6, 6),
+    ('High Jump', '2 days', 10, 7, 7, 7, 7),
+    ('1500m Run', '1 day', 10, 8, 8, 8, 8),
+    ('400m Hurdles', '1 day', 10, 9, 9, 9, 9),
+    ('Decathlon', '2 days', 10, 10, 10, 10, 10);
 
+
+-- Insert into time_slot table
 INSERT INTO time_slot (date, start_time, end_time)
 VALUES
     ('2021-06-01T08:00:00', '2021-06-01T08:00:00', '2021-06-01T10:00:00'),
@@ -64,40 +70,55 @@ VALUES
     ('2021-06-02T14:00:00', '2021-06-02T14:00:00', '2021-06-02T16:00:00'),
     ('2021-06-02T16:00:00', '2021-06-02T16:00:00', '2021-06-02T18:00:00');
 
+-- Insert into track table
+-- Example of valid insertion matching your enum values
 INSERT INTO track (type_of_track, shape_type, surface_type, track_length, lanes)
 VALUES
-    ('FIELD', 'OVAL', 'SAND', 200, 6),
-    ('FIELD', 'OVAL', 'GRASS', 400, 8),
-    ('TRACK', 'STRAIGHT', 'SAND', 100, 6),
-    ('TRACK', 'STRAIGHT', 'GRASS', 200, 8),
-    ('FIELD', 'OVAL', 'SAND', 400, 8),
-    ('TRACK', 'OVAL', 'GRASS', 800, 10),
-    ('FIELD', 'STRAIGHT', 'SAND', 200, 6),
-    ('TRACK', 'STRAIGHT', 'SAND', 400, 8),
-    ('FIELD', 'OVAL', 'SAND', 800, 10),
-    ('FIELD', 'OVAL', 'GRASS', 1600, 12);
+    ('FIELD', 'OVAL', 'SAND', 'METERS', '6'),
+    ('FIELD', 'OVAL', 'GRASS', 'KILOMETERS', '8'),
+    ('TRACK', 'STRAIGHT', 'SAND', 'MILES', '6'),
+    ('TRACK', 'STRAIGHT', 'GRASS', 'METERS', '8'),
+    ('FIELD', 'OVAL', 'SAND', 'KILOMETERS', '8'),
+    ('TRACK', 'OVAL', 'GRASS', 'MILES', '10'),
+    ('FIELD', 'STRAIGHT', 'SAND', 'METERS', '6'),
+    ('TRACK', 'STRAIGHT', 'SAND', 'KILOMETERS', '8'),
+    ('FIELD', 'OVAL', 'SAND', 'MILES', '10'),
+    ('FIELD', 'OVAL', 'GRASS', 'KILOMETERS', '12');
 
 
+-- Insert into discipline_participants table
 INSERT INTO discipline_participants (discipline_id, participants_id)
-VALUES (1,1),
-       (1,2),
-       (1,3),
-       (1,4),
-       (1,5),
-       (1,6),
-       (1,7),
-       (1,8),
-       (1,9),
-       (1,10),
+VALUES
+    (1,1),
+    (1,2),
+    (1,3),
+    (1,4),
+    (1,5),
+    (1,6),
+    (1,7),
+    (1,8),
+    (1,9),
+    (1,10),
+    (2,11),
+    (2,12),
+    (2,13),
+    (2,14),
+    (2,15),
+    (2,16),
+    (2,17),
+    (2,18),
+    (2,19),
+    (2,20);
 
-       (2,11),
-       (2,12),
-       (2,13),
-       (2,14),
-       (2,15),
-       (2,16),
-       (2,17),
-       (2,18),
-       (2,19),
-       (2,20);
-
+INSERT INTO track_disciplines (track_id, disciplines_id)
+VALUES
+    (1,1),
+    (2,2),
+    (3,3),
+    (4,4),
+    (5,5),
+    (6,6),
+    (7,7),
+    (8,8),
+    (9,9),
+    (10,10);

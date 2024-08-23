@@ -9,25 +9,25 @@ import java.util.List;
 @RequestMapping("/tracks")
 public class TrackController {
 
-    TrackService test3Service;
+    TrackService trackService;
 
-    public TrackController(TrackService test3Service) {
-        this.test3Service = test3Service;
+    public TrackController(TrackService trackService) {
+        this.trackService = trackService;
     }
 
     @GetMapping
     public ResponseEntity<List<TrackDTO>> getAllTracks () {
-        return ResponseEntity.ok(test3Service.getAllTracks());
+        return ResponseEntity.ok(trackService.getAllTracks());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TrackDTO> getTrackById(@PathVariable Long id) {
-        return  ResponseEntity.of(test3Service.getTrackById(id));
+        return  ResponseEntity.of(trackService.getTrackById(id));
     }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<TrackDTO> deleteTrack (@PathVariable Long id) {
-        return ResponseEntity.ok(test3Service.deleteTrack(id));
+        return ResponseEntity.ok(trackService.deleteTrack(id));
     }
 }

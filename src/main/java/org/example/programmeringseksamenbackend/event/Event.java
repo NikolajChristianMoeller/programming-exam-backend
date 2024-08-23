@@ -17,19 +17,25 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
+
     private String eventName;
     private String minimumDuration;
     private String maximumParticipants;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "time_slot_id")  // Add this annotation to specify the foreign key column
+    @JoinColumn(name = "time_slot_id")
     private TimeSlot timeSlot;
+
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "track_id")
     private Track track;
+
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "discipline_id")
     private Discipline discipline;
+
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "participant_id")
     private Participant participant;
 }

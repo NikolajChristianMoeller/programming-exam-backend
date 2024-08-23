@@ -9,7 +9,6 @@ import org.example.programmeringseksamenbackend.participant.Participant;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Getter
 @Setter
 @NoArgsConstructor

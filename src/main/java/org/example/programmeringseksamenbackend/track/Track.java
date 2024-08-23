@@ -19,10 +19,14 @@ public class Track {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-    private String typeOfTrack;
-    private String shapeType;
-    private String surfaceType;
-    private Double trackLength;
+    @Enumerated(EnumType.STRING)
+    private TrackType trackType;
+    @Enumerated(EnumType.STRING)
+    private TrackShape trackShape;
+    @Enumerated(EnumType.STRING)
+    private TrackSurface trackSurface;
+    @Enumerated(EnumType.STRING)
+    private TrackLength trackLength;
     private String lanes;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Discipline> disciplines = new ArrayList<>();
