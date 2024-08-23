@@ -38,19 +38,6 @@ VALUES
     ('Abigail Thomas', 58, 'FEMALE', 'SENIOR'),
     ('Alexander Jackson', 110, 'MALE', 'SENIOR');
 
-INSERT INTO event (event_name, minimum_duration, maximum_participants, time_slot_id, track_id, discipline_id, participant_id)
-VALUES
-    ('100m Dash', '1 day', 10, 1, 1, 1, 1),
-    ('Marathon', '1 day', 10, 2, 2, 2, 2),
-    ('Long Jump', '2 days', 10, 3, 3, 3, 3),
-    ('Pole Vault', '2 days', 10, 4, 4, 4, 4),
-    ('4x400m Relay', '1 day', 10, 5, 5, 5, 5),
-    ('Shot Put', '2 days', 10, 6, 6, 6, 6),
-    ('High Jump', '2 days', 10, 7, 7, 7, 7),
-    ('1500m Run', '1 day', 10, 8, 8, 8, 8),
-    ('400m Hurdles', '1 day', 10, 9, 9, 9, 9),
-    ('Decathlon', '2 days', 10, 10, 10, 10, 10);
-
 INSERT INTO time_slot (date, start_time, end_time)
 VALUES
     ('2021-06-01T08:00:00', '2021-06-01T08:00:00', '2021-06-01T10:00:00'),
@@ -64,7 +51,7 @@ VALUES
     ('2021-06-02T14:00:00', '2021-06-02T14:00:00', '2021-06-02T16:00:00'),
     ('2021-06-02T16:00:00', '2021-06-02T16:00:00', '2021-06-02T18:00:00');
 
-INSERT INTO track (type_of_track, shape_type, surface_type, track_length, lanes)
+INSERT INTO track (track_type, track.track_shape, track_surface, track_length, lanes)
 VALUES
     ('FIELD', 'OVAL', 'SAND', 'METERS', '6'),
     ('FIELD', 'OVAL', 'GRASS', 'KILOMETERS', '8'),
@@ -76,6 +63,19 @@ VALUES
     ('TRACK', 'STRAIGHT', 'SAND', 'KILOMETERS', '8'),
     ('FIELD', 'OVAL', 'SAND', 'MILES', '10'),
     ('FIELD', 'OVAL', 'GRASS', 'KILOMETERS', '12');
+
+INSERT INTO event (event_name, minimum_duration, maximum_participants, time_slot_id, track_id, discipline_id, participant_id)
+VALUES
+    ('100m Dash', '1 day', 10, 1, 1, 1, 1),
+    ('Marathon', '1 day', 10, 2, 2, 2, 2),
+    ('Long Jump', '2 days', 10, 3, 3, 3, 3),
+    ('Pole Vault', '2 days', 10, 4, 4, 4, 4),
+    ('4x400m Relay', '1 day', 10, 5, 5, 5, 5),
+    ('Shot Put', '2 days', 10, 6, 6, 6, 6),
+    ('High Jump', '2 days', 10, 7, 7, 7, 7),
+    ('1500m Run', '1 day', 10, 8, 8, 8, 8),
+    ('400m Hurdles', '1 day', 10, 9, 9, 9, 9),
+    ('Decathlon', '2 days', 10, 10, 10, 10, 10);
 
 INSERT INTO discipline_participants (discipline_id, participants_id)
 VALUES
