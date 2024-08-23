@@ -63,9 +63,4 @@ public class DisciplineService {
         return savedDisciplineDTO;
     }
 
-    /* public DisciplineDTO createDiscipline(DisciplineDTO disciplineDTO) {
-        Discipline discipline = new Discipline();
-        return toDTO(disciplineRepository.save(discipline));
-    } */
-
 }

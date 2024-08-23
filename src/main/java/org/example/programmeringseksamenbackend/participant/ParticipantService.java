@@ -1,7 +1,6 @@
 package org.example.programmeringseksamenbackend.participant;
 
 import org.example.programmeringseksamenbackend.discipline.Discipline;
-import org.example.programmeringseksamenbackend.discipline.DisciplineDTO;
 import org.example.programmeringseksamenbackend.discipline.DisciplineRepository;
 import org.example.programmeringseksamenbackend.errorhandling.exception.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -68,10 +67,8 @@ public class ParticipantService {
         Participant participant = toEntity(participantDTO);
         participant.setDiscipline(discipline);
 
-        // Save participant
         Participant savedParticipant = participantRepository.save(participant);
 
-        // Update discipline's participants list
         discipline.getParticipants().add(savedParticipant);
         disciplineRepository.save(discipline);
 

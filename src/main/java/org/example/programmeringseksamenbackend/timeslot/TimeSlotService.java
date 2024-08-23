@@ -27,7 +27,7 @@ public class TimeSlotService {
         timeSlotDTO.setStartTime(timeSlot.getStartTime());
         timeSlotDTO.setEndTime(timeSlot.getEndTime());
         timeSlotDTO.setEvents(timeSlot.getEvents().stream()
-                .map(this::eventToDTO) // You need to implement this method
+                .map(this::eventToDTO)
                 .collect(Collectors.toList()));
         return timeSlotDTO;
     }
@@ -105,24 +105,19 @@ public class TimeSlotService {
     }
 
     public TimeSlotDTO removeEventFromTimeSlot(Long timeSlotId, Long eventId) {
-        // Find the time slot
         TimeSlot timeSlot = timeSlotRepository.findById(timeSlotId)
                 .orElseThrow(() -> new NotFoundException("TimeSlot not found with id: " + timeSlotId));
 
-        // Find the event
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event not found with id: " + eventId));
 
-        // Check if the event is actually associated with the time slot
         if (event.getTimeSlot() == null || !event.getTimeSlot().getId().equals(timeSlotId)) {
             throw new RuntimeException("Event is not associated with this time slot.");
         }
 
-        // Remove the event from the time slot
         timeSlot.getEvents().remove(event);
-        event.setTimeSlot(null); // Clear the association
+        event.setTimeSlot(null);
 
-        // Save changes to both time slot and event
         timeSlotRepository.save(timeSlot);
         eventRepository.save(event);
 
@@ -135,7 +130,6 @@ public class TimeSlotService {
         eventDTO.setEventName(event.getEventName());
         eventDTO.setMinimumDuration(event.getMinimumDuration());
         eventDTO.setMaximumParticipants(event.getMaximumParticipants());
-        // Set other properties if needed
         return eventDTO;
     }
 }
