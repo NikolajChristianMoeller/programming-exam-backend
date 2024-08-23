@@ -2,7 +2,6 @@ USE eksamen_db;
 
 CREATE SCHEMA IF NOT EXISTS eksamen_db;
 
--- Insert into discipline table
 INSERT INTO discipline (discipline_name, approx_duration)
 VALUES
     ('100m Dash', '2 hours'),
@@ -16,7 +15,6 @@ VALUES
     ('400m Hurdles', '3 hours'),
     ('Decathlon', '8 hours');
 
--- Insert into participant table
 INSERT INTO participant (full_name, participant_number, gender, age_group)
 VALUES
     ('Emma Brown', 20, 'FEMALE', 'JUNIOR'),
@@ -40,8 +38,6 @@ VALUES
     ('Abigail Thomas', 58, 'FEMALE', 'SENIOR'),
     ('Alexander Jackson', 110, 'MALE', 'SENIOR');
 
--- Insert into event table
--- Insert into event table with all foreign keys
 INSERT INTO event (event_name, minimum_duration, maximum_participants, time_slot_id, track_id, discipline_id, participant_id)
 VALUES
     ('100m Dash', '1 day', 10, 1, 1, 1, 1),
@@ -55,8 +51,6 @@ VALUES
     ('400m Hurdles', '1 day', 10, 9, 9, 9, 9),
     ('Decathlon', '2 days', 10, 10, 10, 10, 10);
 
-
--- Insert into time_slot table
 INSERT INTO time_slot (date, start_time, end_time)
 VALUES
     ('2021-06-01T08:00:00', '2021-06-01T08:00:00', '2021-06-01T10:00:00'),
@@ -70,8 +64,6 @@ VALUES
     ('2021-06-02T14:00:00', '2021-06-02T14:00:00', '2021-06-02T16:00:00'),
     ('2021-06-02T16:00:00', '2021-06-02T16:00:00', '2021-06-02T18:00:00');
 
--- Insert into track table
--- Example of valid insertion matching your enum values
 INSERT INTO track (type_of_track, shape_type, surface_type, track_length, lanes)
 VALUES
     ('FIELD', 'OVAL', 'SAND', 'METERS', '6'),
@@ -85,8 +77,6 @@ VALUES
     ('FIELD', 'OVAL', 'SAND', 'MILES', '10'),
     ('FIELD', 'OVAL', 'GRASS', 'KILOMETERS', '12');
 
-
--- Insert into discipline_participants table
 INSERT INTO discipline_participants (discipline_id, participants_id)
 VALUES
     (1,1),
@@ -122,3 +112,4 @@ VALUES
     (8,8),
     (9,9),
     (10,10);
+

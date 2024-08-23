@@ -27,7 +27,7 @@ public class Track {
     private TrackSurface trackSurface;
     @Enumerated(EnumType.STRING)
     private TrackLength trackLength;
-    private String lanes;
+    private int lanes;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Discipline> disciplines = new ArrayList<>();
 

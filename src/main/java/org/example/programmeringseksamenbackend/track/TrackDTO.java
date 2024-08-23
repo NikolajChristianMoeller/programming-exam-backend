@@ -22,6 +22,6 @@ public class TrackDTO {
     private TrackSurface trackSurface;
     @Enumerated(EnumType.STRING)
     private TrackLength trackLength;
-    private String lanes;
+    private int lanes;
     private List<DisciplineDTO> disciplines;
 }

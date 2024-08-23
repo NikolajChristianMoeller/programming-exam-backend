@@ -17,36 +17,32 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<List<EventDTO>> getAllEvents() {
-        return ResponseEntity.ok(eventService.getAllEvents());
+        List<EventDTO> events = eventService.getAllEvents();
+        return ResponseEntity.ok(events);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable Long id) {
-        return ResponseEntity.of(eventService.getEventById(id));
+        return eventService.getEventById(id)
+                .map(ResponseEntity::ok) // Convert Optional<EventDTO> to ResponseEntity<EventDTO>
+                .orElseGet(() -> ResponseEntity.notFound().build()); // Return 404 if not found
     }
 
     @PostMapping
     public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) {
         EventDTO createdEvent = eventService.createEvent(eventDTO);
-        return ResponseEntity.status(201).body(createdEvent);
-    }
-
-    @PutMapping("/{eventId}/assignTrack/{trackId}")
-    public ResponseEntity<EventDTO> assignTrackToEvent(@PathVariable Long eventId, @PathVariable Long trackId) {
-        EventDTO updatedEvent = eventService.assignTrackToEvent(eventId, trackId);
-        return ResponseEntity.ok(updatedEvent);
+        return ResponseEntity.status(201).body(createdEvent); // Return 201 Created status
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<EventDTO> updateEvent(@PathVariable Long id, @RequestBody EventDTO eventDTO) {
         EventDTO updatedEvent = eventService.updateEvent(id, eventDTO);
-        return ResponseEntity.ok(updatedEvent);
+        return ResponseEntity.ok(updatedEvent); // Return 200 OK status
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<EventDTO> deleteEvent(@PathVariable Long id) {
         EventDTO deletedEvent = eventService.deleteEvent(id);
-        return ResponseEntity.ok(deletedEvent);
+        return ResponseEntity.ok(deletedEvent); // Return 200 OK status
     }
 }
-

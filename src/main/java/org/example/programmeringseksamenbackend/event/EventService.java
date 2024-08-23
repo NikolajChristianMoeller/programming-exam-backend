@@ -1,15 +1,14 @@
 package org.example.programmeringseksamenbackend.event;
 
 import org.example.programmeringseksamenbackend.discipline.Discipline;
-import org.example.programmeringseksamenbackend.discipline.DisciplineDTO;
 import org.example.programmeringseksamenbackend.discipline.DisciplineRepository;
 import org.example.programmeringseksamenbackend.errorhandling.exception.NotFoundException;
 import org.example.programmeringseksamenbackend.timeslot.TimeSlot;
 import org.example.programmeringseksamenbackend.timeslot.TimeSlotRepository;
 import org.example.programmeringseksamenbackend.track.Track;
-import org.example.programmeringseksamenbackend.track.TrackRepository; // Ensure you have a TrackRepository
+import org.example.programmeringseksamenbackend.track.TrackRepository;
 import org.example.programmeringseksamenbackend.participant.Participant;
-import org.example.programmeringseksamenbackend.participant.ParticipantRepository; // Ensure you have a ParticipantRepository
+import org.example.programmeringseksamenbackend.participant.ParticipantRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +20,8 @@ public class EventService {
     private final EventRepository eventRepository;
     private final DisciplineRepository disciplineRepository;
     private final TimeSlotRepository timeSlotRepository;
-    private final TrackRepository trackRepository; // Added TrackRepository
-    private final ParticipantRepository participantRepository; // Added ParticipantRepository
+    private final TrackRepository trackRepository;
+    private final ParticipantRepository participantRepository;
 
     public EventService(EventRepository eventRepository, DisciplineRepository disciplineRepository,
                         TimeSlotRepository timeSlotRepository, TrackRepository trackRepository,
@@ -42,10 +41,7 @@ public class EventService {
         eventDTO.setMaximumParticipants(event.getMaximumParticipants());
 
         if (event.getDiscipline() != null) {
-            DisciplineDTO disciplineDTO = new DisciplineDTO();
-            disciplineDTO.setId(event.getDiscipline().getId());
-            disciplineDTO.setDisciplineName(event.getDiscipline().getDisciplineName());
-            eventDTO.setDiscipline(disciplineDTO);
+            eventDTO.setDisciplineId(event.getDiscipline().getId());
         }
         if (event.getTimeSlot() != null) {
             eventDTO.setTimeSlotId(event.getTimeSlot().getId());
@@ -66,9 +62,9 @@ public class EventService {
         event.setMinimumDuration(eventDTO.getMinimumDuration());
         event.setMaximumParticipants(eventDTO.getMaximumParticipants());
 
-        if (eventDTO.getDiscipline() != null && eventDTO.getDiscipline().getId() != null) {
-            Discipline discipline = disciplineRepository.findById(eventDTO.getDiscipline().getId())
-                    .orElseThrow(() -> new NotFoundException("Discipline not found with id: " + eventDTO.getDiscipline().getId()));
+        if (eventDTO.getDisciplineId() != null) {
+            Discipline discipline = disciplineRepository.findById(eventDTO.getDisciplineId())
+                    .orElseThrow(() -> new NotFoundException("Discipline not found with id: " + eventDTO.getDisciplineId()));
             event.setDiscipline(discipline);
         }
         if (eventDTO.getTrackId() != null) {
@@ -101,47 +97,21 @@ public class EventService {
 
         Optional<Event> eventOptional = eventRepository.findById(id);
 
-        if (eventOptional.isEmpty()) {
-            throw new NotFoundException("Event not found, provided id: " + id);
-        }
-
         return eventOptional.map(this::toDTO);
     }
 
     public EventDTO createEvent(EventDTO eventDTO) {
-        Event event = new Event();
-        event.setEventName(eventDTO.getEventName());
-        event.setMinimumDuration(eventDTO.getMinimumDuration());
-        event.setMaximumParticipants(eventDTO.getMaximumParticipants());
-
-        // Fetch and set discipline (required)
+        Track track = trackRepository.findById(eventDTO.getTrackId())
+                .orElseThrow(() -> new NotFoundException("Track not found"));
         Discipline discipline = disciplineRepository.findById(eventDTO.getDisciplineId())
-                .orElseThrow(() -> new NotFoundException("Discipline not found with id: " + eventDTO.getDisciplineId()));
-        event.setDiscipline(discipline);
+                .orElseThrow(() -> new NotFoundException("Discipline not found"));
 
-        // Fetch and set timeSlot if provided
-        if (eventDTO.getTimeSlotId() != null) {
-            TimeSlot timeSlot = timeSlotRepository.findById(eventDTO.getTimeSlotId())
-                    .orElseThrow(() -> new NotFoundException("TimeSlot not found with id: " + eventDTO.getTimeSlotId()));
-            event.setTimeSlot(timeSlot);
+        if (!track.getDisciplines().contains(discipline)) {
+            throw new IllegalArgumentException("Discipline is not associated with the track");
         }
 
-        // Fetch and set track if provided
-        if (eventDTO.getTrackId() != null) {
-            Track track = trackRepository.findById(eventDTO.getTrackId())
-                    .orElseThrow(() -> new NotFoundException("Track not found with id: " + eventDTO.getTrackId()));
-            event.setTrack(track);
-        }
-
-        // Fetch and set participant if provided
-        if (eventDTO.getParticipantId() != null) {
-            Participant participant = participantRepository.findById(eventDTO.getParticipantId())
-                    .orElseThrow(() -> new NotFoundException("Participant not found with id: " + eventDTO.getParticipantId()));
-            event.setParticipant(participant);
-        }
-
-        Event savedEvent = eventRepository.save(event);
-        return toDTO(savedEvent);
+        Event event = toEntity(eventDTO);
+        return toDTO(eventRepository.save(event));
     }
 
     public EventDTO updateEvent(Long id, EventDTO eventDTO) {
@@ -150,9 +120,9 @@ public class EventService {
             event.setMinimumDuration(eventDTO.getMinimumDuration());
             event.setMaximumParticipants(eventDTO.getMaximumParticipants());
 
-            if (eventDTO.getDiscipline() != null && eventDTO.getDiscipline().getId() != null) {
-                Discipline discipline = disciplineRepository.findById(eventDTO.getDiscipline().getId())
-                        .orElseThrow(() -> new NotFoundException("Discipline not found with id: " + eventDTO.getDiscipline().getId()));
+            if (eventDTO.getDisciplineId() != null) {
+                Discipline discipline = disciplineRepository.findById(eventDTO.getDisciplineId())
+                        .orElseThrow(() -> new NotFoundException("Discipline not found with id: " + eventDTO.getDisciplineId()));
                 event.setDiscipline(discipline);
             }
             if (eventDTO.getTrackId() != null) {
@@ -172,12 +142,12 @@ public class EventService {
             }
 
             return toDTO(eventRepository.save(event));
-        }).orElse(null);
+        }).orElseThrow(() -> new NotFoundException("Event not found with id: " + id));
     }
 
     public EventDTO deleteEvent(Long id) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Event not found, provided id: " + id));
+                .orElseThrow(() -> new NotFoundException("Event not found with id: " + id));
         EventDTO eventDTO = toDTO(event);
         eventRepository.deleteById(id);
         return eventDTO;
@@ -204,26 +174,17 @@ public class EventService {
     }
 
     public EventDTO assignTrackToEvent(Long eventId, Long trackId) {
-        // Retrieve the event by ID
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event not found with ID: " + eventId));
-
-        // Retrieve the track by ID
         Track track = trackRepository.findById(trackId)
                 .orElseThrow(() -> new NotFoundException("Track not found with ID: " + trackId));
 
-        // Ensure the track is suitable for the discipline of the event
-        if (!track.getDisciplines().contains(event.getDiscipline())) {
+        if (event.getDiscipline() != null && !track.getDisciplines().contains(event.getDiscipline())) {
             throw new IllegalArgumentException("Track is not suitable for the event's discipline.");
         }
 
-        // Assign the track to the event
         event.setTrack(track);
-
-        // Save the updated event
         Event updatedEvent = eventRepository.save(event);
-
-        // Convert the updated event to DTO and return
         return toDTO(updatedEvent);
     }
 }
