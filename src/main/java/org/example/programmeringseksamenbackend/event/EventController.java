@@ -24,25 +24,25 @@ public class EventController {
     @GetMapping("/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable Long id) {
         return eventService.getEventById(id)
-                .map(ResponseEntity::ok) // Convert Optional<EventDTO> to ResponseEntity<EventDTO>
-                .orElseGet(() -> ResponseEntity.notFound().build()); // Return 404 if not found
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) {
         EventDTO createdEvent = eventService.createEvent(eventDTO);
-        return ResponseEntity.status(201).body(createdEvent); // Return 201 Created status
+        return ResponseEntity.status(201).body(createdEvent);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<EventDTO> updateEvent(@PathVariable Long id, @RequestBody EventDTO eventDTO) {
         EventDTO updatedEvent = eventService.updateEvent(id, eventDTO);
-        return ResponseEntity.ok(updatedEvent); // Return 200 OK status
+        return ResponseEntity.ok(updatedEvent);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<EventDTO> deleteEvent(@PathVariable Long id) {
         EventDTO deletedEvent = eventService.deleteEvent(id);
-        return ResponseEntity.ok(deletedEvent); // Return 200 OK status
+        return ResponseEntity.ok(deletedEvent);
     }
 }
