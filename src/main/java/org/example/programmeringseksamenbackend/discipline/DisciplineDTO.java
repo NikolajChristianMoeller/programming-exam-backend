@@ -18,6 +18,4 @@ public class DisciplineDTO {
         this.disciplineName = disciplineName;
         this.approxDuration = approxDuration;
     }
-
-
 }

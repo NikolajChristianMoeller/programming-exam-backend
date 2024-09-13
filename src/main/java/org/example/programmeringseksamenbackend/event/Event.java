@@ -38,4 +38,5 @@ public class Event {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "participant_id")
     private Participant participant;
+
 }

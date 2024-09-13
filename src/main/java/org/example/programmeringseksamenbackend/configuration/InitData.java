@@ -25,18 +25,13 @@ public class InitData implements CommandLineRunner {
         if (disciplineService.getAllDisciplines().isEmpty()) {
             System.out.println("Creating disciplines and events");
             for (int i = 1; i <= 50; i++) {
-                //System.out.println("Creating discipline " + i);
                 DisciplineDTO disciplineDTO = createDiscipline(i);
                 int numberOfDisciplines = (int) (Math.random() * 10) + 10;
-                //System.out.println("Creating " + numberOfRooms + " rooms in discipline " + disciplineDTO.getName());
                 createParticipantsInDiscipline(numberOfDisciplines, disciplineDTO);
             }
-            /* System.out.println("Done creating disciplines and rooms"); */
             System.out.println("Done creating disciplines");
         } else {
-            /* System.out.println("Disciplines and rooms already exist"); */
             System.out.println("Disciplines already exist");
-
         }
     }
 
